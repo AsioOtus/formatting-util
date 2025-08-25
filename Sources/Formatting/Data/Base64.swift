@@ -30,7 +30,7 @@ public extension Data.Base64FormatStyle {
 
 extension Data.Base64EncodingOptions: Codable, @retroactive Hashable { }
 
-extension FormatStyle where Self == Data.Base64FormatStyle {
+public extension FormatStyle where Self == Data.Base64FormatStyle {
     static var base64: Self { .init() }
 }
 

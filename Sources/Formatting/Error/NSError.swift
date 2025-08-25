@@ -1,8 +1,19 @@
 import Foundation
 
 extension NSError {
-    public struct DefaultFormatStyle: FormatStyle {
-        public init () { }
+    public struct DefaultFormatStyle<UserInfoFS>: FormatStyle
+    where
+    UserInfoFS: FormatStyle,
+    UserInfoFS.FormatInput == [String: Any],
+    UserInfoFS.FormatOutput == String
+    {
+        public let userInfoFormatStyle: UserInfoFS
+
+        public init (
+            userInfoFormatStyle: UserInfoFS
+        ) {
+            self.userInfoFormatStyle = userInfoFormatStyle
+        }
 
         public func format (_ error: NSError) -> String {
             var components: [String] = []
@@ -22,15 +33,30 @@ extension NSError {
                 components.append("Recovery: \(suggestion)")
             }
 
+            if !error.userInfo.isEmpty {
+                components.append("User info: \(userInfoFormatStyle.format(error.userInfo))")
+            }
+
             return components.joined(separator: "\n")
         }
     }
 }
 
 public extension FormatStyle {
-    static func nsError () -> Self where Self == NSError.DefaultFormatStyle { .init() }
+    static func nsError <UserInfoFS> (userInfo: UserInfoFS) -> Self
+    where
+    UserInfoFS: FormatStyle,
+    Self == NSError.DefaultFormatStyle<UserInfoFS>
+    {
+        .init(userInfoFormatStyle: userInfo)
+    }
 }
 
 public extension AnyFormatStyle {
-    static func nsError () -> NSError.DefaultFormatStyle { .init() }
+    static func nsError <UserInfoFS> (userInfo: UserInfoFS) -> NSError.DefaultFormatStyle<UserInfoFS>
+    where
+    UserInfoFS: FormatStyle
+    {
+        .init(userInfoFormatStyle: userInfo)
+    }
 }

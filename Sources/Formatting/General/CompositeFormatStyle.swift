@@ -36,9 +36,9 @@ extension CompositeFormatStyle: Hashable {
 }
 
 extension FormatStyle {
-    static func compose <Input, Output, DefaultFS: FormatStyle> (
+    static func `try` <Input, Output, DefaultFS: FormatStyle> (
         _ formatStyles: AnyFormatStyle<Input, Output?>...,
-        default: DefaultFS
+        or default: DefaultFS
     ) -> Self
     where
     Self == CompositeFormatStyle<Input, Output>,
@@ -52,9 +52,9 @@ extension FormatStyle {
 }
 
 extension AnyFormatStyle {
-    static func compose <Input, Output, DefaultFS: FormatStyle> (
+    static func `try` <Input, Output, DefaultFS: FormatStyle> (
         _ formatStyles: AnyFormatStyle<Input, Output?>...,
-        default: DefaultFS
+        or default: DefaultFS
     ) -> CompositeFormatStyle<Input, Output>
     where
     DefaultFS.FormatInput == Input, DefaultFS.FormatOutput == Output

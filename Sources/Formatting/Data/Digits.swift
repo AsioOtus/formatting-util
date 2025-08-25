@@ -93,7 +93,7 @@ public extension Data.DigitsFormatStyle {
     }
 }
 
-extension FormatStyle where Self == Data.DigitsFormatStyle {
+public extension FormatStyle where Self == Data.DigitsFormatStyle {
     static var digits: Self { .init() }
 }
 

@@ -184,7 +184,7 @@ public extension URLRequest.DefaultFormatStyle {
     }
 }
 
-extension FormatStyle {
+public extension FormatStyle {
     static func urlRequest <BodyFS, HeadersFS> (
         url: URL.FormatStyle = .url,
         headers: HeadersFS,
@@ -234,7 +234,7 @@ extension FormatStyle {
     }
 }
 
-extension AnyFormatStyle {
+public extension AnyFormatStyle {
     static func urlRequest <BodyFS, HeadersFS> (
         url: URL.FormatStyle = .url,
         headers: HeadersFS,

@@ -33,7 +33,7 @@ extension DefaultableFormatStyle: Hashable {
 }
 
 public extension FormatStyle {
-    func withDefault <Value> (_ value: Value) -> DefaultableFormatStyle<Value, Self> where Self.FormatOutput == Value? {
+    func or <Value> (_ value: Value) -> DefaultableFormatStyle<Value, Self> where Self.FormatOutput == Value? {
         .init(
             defaultValue: value,
             innerFormatStyle: self

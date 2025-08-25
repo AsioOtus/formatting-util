@@ -1,21 +1,18 @@
 import Foundation
 
-extension HTTPURLResponse.DefaultFormatStyle {
+extension URLResponse.DefaultFormatStyle {
     public struct Options: Sendable, Codable, Hashable {
         public let prefix: String?
-        public let isRequestLineOnly: Bool
 
         public init (
-            prefix: String? = nil,
-            isRequestLineOnly: Bool = false
+            prefix: String? = nil
         ) {
             self.prefix = prefix
-            self.isRequestLineOnly = isRequestLineOnly
         }
     }
 }
 
-extension HTTPURLResponse {
+extension URLResponse {
     public struct DefaultFormatStyle<HeadersFS>: FormatStyle, Codable, Hashable
     where
     HeadersFS: FormatStyle,
@@ -46,18 +43,11 @@ extension HTTPURLResponse {
             self.headersFormatStyle = headers
         }
 
-        public func format (_ httpUrlResponse: HTTPURLResponse) -> String {
+        public func format (_ urlResponse: URLResponse) -> String {
             var components = [String]()
 
             prefix(&components)
-            requestLine(httpUrlResponse, &components)
-
-            guard !options.isRequestLineOnly else {
-                return components.joined(separator: "\n")
-            }
-
-            components.append("")
-            headers(httpUrlResponse, &components)
+            requestLine(urlResponse, &components)
 
             return components.joined(separator: "\n")
         }
@@ -69,25 +59,16 @@ extension HTTPURLResponse {
             }
         }
 
-        private func requestLine (_ httpUrlResponse: HTTPURLResponse, _ components: inout [String]) {
-            let method = httpUrlResponse.statusCode.description
-            let url = httpUrlResponse.url?.formatted(urlFormatStyle).ifEmpty("No URL") ?? noValue("No URL")
-            let requestLine = "\(method) – \(url)"
+        private func requestLine (_ urlResponse: URLResponse, _ components: inout [String]) {
+            let url = urlResponse.url?.formatted(urlFormatStyle).ifEmpty("No URL") ?? noValue("No URL")
+            let requestLine = "\(url)"
 
             components.append(requestLine)
-        }
-
-        private func headers (_ httpUrlResponse: HTTPURLResponse, _ components: inout [String]) {
-            components.append(
-                headersFormatStyle
-                    .format(httpUrlResponse.allHeaderFields)
-                    .ifEmpty("No headers")
-            )
         }
     }
 }
 
-public extension HTTPURLResponse.DefaultFormatStyle {
+public extension URLResponse.DefaultFormatStyle {
     func options (_ options: Options) -> Self {
         .init(
             options: options,
@@ -99,19 +80,7 @@ public extension HTTPURLResponse.DefaultFormatStyle {
     func prefix (_ prefix: String) -> Self {
         .init(
             options: .init(
-                prefix: prefix,
-                isRequestLineOnly: options.isRequestLineOnly
-            ),
-            url: urlFormatStyle,
-            headers: headersFormatStyle
-        )
-    }
-
-    func isRequestLineOnly (_ isRequestLineOnly: Bool) -> Self {
-        .init(
-            options: .init(
-                prefix: options.prefix,
-                isRequestLineOnly: isRequestLineOnly
+                prefix: prefix
             ),
             url: urlFormatStyle,
             headers: headersFormatStyle
@@ -120,20 +89,20 @@ public extension HTTPURLResponse.DefaultFormatStyle {
 }
 
 public extension FormatStyle {
-    static func httpUrlResponse <HeadersFS> (
+    static func urlResponse <HeadersFS> (
         url: URL.FormatStyle = .url,
         headers: HeadersFS
-    ) -> Self where Self == HTTPURLResponse.DefaultFormatStyle<HeadersFS> {
+    ) -> Self where Self == URLResponse.DefaultFormatStyle<HeadersFS> {
         .init(
             url: url,
             headers: headers
         )
     }
 
-    static func httpUrlResponse (
+    static func urlResponse (
         url: URL.FormatStyle = .url,
         headers: [AnyHashable: Any].DefaultFormatStyle<String.InterpolationFormatStyle<AnyHashable>, String.InterpolationFormatStyle<Any>> = .dictionary()
-    ) -> Self where Self == HTTPURLResponse.DefaultFormatStyle<[AnyHashable: Any].DefaultFormatStyle<String.InterpolationFormatStyle<AnyHashable>, String.InterpolationFormatStyle<Any>>> {
+    ) -> Self where Self == URLResponse.DefaultFormatStyle<[AnyHashable: Any].DefaultFormatStyle<String.InterpolationFormatStyle<AnyHashable>, String.InterpolationFormatStyle<Any>>> {
         .init(
             url: url,
             headers: headers
@@ -142,20 +111,20 @@ public extension FormatStyle {
 }
 
 public extension AnyFormatStyle {
-    static func httpUrlResponse <HeadersFS> (
+    static func urlResponse <HeadersFS> (
         url: URL.FormatStyle = .url,
         headers: HeadersFS
-    ) -> HTTPURLResponse.DefaultFormatStyle<HeadersFS> {
+    ) -> URLResponse.DefaultFormatStyle<HeadersFS> {
         .init(
             url: url,
             headers: headers
         )
     }
 
-    static func httpUrlResponse (
+    static func urlResponse (
         url: URL.FormatStyle = .url,
         headers: [AnyHashable: Any].DefaultFormatStyle<String.InterpolationFormatStyle<AnyHashable>, String.InterpolationFormatStyle<Any>> = .dictionary()
-    ) -> HTTPURLResponse.DefaultFormatStyle<[AnyHashable: Any].DefaultFormatStyle<String.InterpolationFormatStyle<AnyHashable>, String.InterpolationFormatStyle<Any>>> {
+    ) -> URLResponse.DefaultFormatStyle<[AnyHashable: Any].DefaultFormatStyle<String.InterpolationFormatStyle<AnyHashable>, String.InterpolationFormatStyle<Any>>> {
         .init(
             url: url,
             headers: headers

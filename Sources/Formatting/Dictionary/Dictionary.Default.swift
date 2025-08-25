@@ -152,7 +152,7 @@ public extension Dictionary.DefaultFormatStyle {
     }
 }
 
-extension FormatStyle {
+public extension FormatStyle {
     static func dictionary <KeyFS, ValueFS> (
         key: KeyFS,
         value: ValueFS
@@ -189,7 +189,7 @@ extension FormatStyle {
     }
 }
 
-extension AnyFormatStyle {
+public extension AnyFormatStyle {
     static func dictionary <KeyFS, ValueFS> (
         key: KeyFS,
         value: ValueFS

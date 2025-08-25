@@ -31,7 +31,7 @@ extension OptionalCompositeFormatStyle: Hashable {
 }
 
 extension FormatStyle {
-    static func compose <Input, Output> (
+    static func `try` <Input, Output> (
         _ formatStyles: AnyFormatStyle<Input, Output?>...
     ) -> Self where Self == OptionalCompositeFormatStyle<Input, Output> {
         .init(formatStyles)
@@ -39,7 +39,7 @@ extension FormatStyle {
 }
 
 extension AnyFormatStyle {
-    static func compose <Input, Output> (
+    static func `try` <Input, Output> (
         _ formatStyles: AnyFormatStyle<Input, Output?>...
     ) -> OptionalCompositeFormatStyle<Input, Output> {
         .init(formatStyles)

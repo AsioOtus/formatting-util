@@ -6,6 +6,7 @@ let package = Package(
     name: "formatting-util",
     platforms: [
         .iOS(.v16),
+        .macOS(.v13),
     ],
     products: [
         .library(
