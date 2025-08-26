@@ -1,28 +1,12 @@
 import Foundation
 
-extension Dictionary.DefaultFormatStyle {
-    public struct Options: Sendable, Codable, Hashable {
-        public let separator: String
-        public let withBrackets: Bool
-        public let padding: String
-        public let paddingSize: Int
-
-        public init (
-            separator: String = "\n",
-            withBrackets: Bool = false,
-            padding: String = " ",
-            paddingSize: Int = 0
-        ) {
-            self.separator = separator
-            self.withBrackets = withBrackets
-            self.padding = padding
-            self.paddingSize = paddingSize
-        }
-    }
-}
+public typealias DictionaryDefaultFormatStyle<Key, Value> = [Key: Value].StandardFormatStyle<
+    String.InterpolationFormatStyle<Key>,
+    String.InterpolationFormatStyle<Value>
+> where Key: Hashable
 
 extension Dictionary {
-    public struct DefaultFormatStyle<KeyFS, ValueFS>: FormatStyle
+    public struct StandardFormatStyle<KeyFS, ValueFS>: FormatStyle
     where
     KeyFS: FormatStyle,
     KeyFS.FormatInput == Key,
@@ -65,7 +49,8 @@ extension Dictionary {
                 .joined(separator: options.separator)
 
             if options.withBrackets {
-                string = """
+                string =
+                """
                 [
                 \(string)
                 ]
@@ -77,7 +62,7 @@ extension Dictionary {
     }
 }
 
-public extension Dictionary.DefaultFormatStyle {
+public extension Dictionary.StandardFormatStyle {
     func options (_ options: Options) -> Self {
         .init(
             options: options,
@@ -148,75 +133,6 @@ public extension Dictionary.DefaultFormatStyle {
             ),
             key: keyFormatStyle,
             value: valueFormatStyle
-        )
-    }
-}
-
-public extension FormatStyle {
-    static func dictionary <KeyFS, ValueFS> (
-        key: KeyFS,
-        value: ValueFS
-    ) -> Self
-    where
-    KeyFS: FormatStyle,
-    ValueFS: FormatStyle,
-    Self == [KeyFS.FormatInput: ValueFS.FormatInput].DefaultFormatStyle<KeyFS, ValueFS>
-    {
-        .init(
-            key: key,
-            value: value
-        )
-    }
-
-    static func dictionary <Key, Value> () -> Self
-    where
-    Self == [Key: Value].DefaultFormatStyle<String.InterpolationFormatStyle<Key>, String.InterpolationFormatStyle<Value>>
-    {
-        .init(
-            key: .interpolation(),
-            value: .interpolation()
-        )
-    }
-
-    static func dictionary () -> Self
-    where
-    Self == [String: String].DefaultFormatStyle<String.TransparentFormatStyle, String.TransparentFormatStyle>
-    {
-        .init(
-            key: .string,
-            value: .string
-        )
-    }
-}
-
-public extension AnyFormatStyle {
-    static func dictionary <KeyFS, ValueFS> (
-        key: KeyFS,
-        value: ValueFS
-    ) -> [KeyFS.FormatInput: ValueFS.FormatInput].DefaultFormatStyle<KeyFS, ValueFS>
-    where
-    KeyFS: FormatStyle,
-    ValueFS: FormatStyle
-    {
-        .init(
-            key: key,
-            value: value
-        )
-    }
-
-    static func dictionary <Key, Value> () -> [Key: Value].DefaultFormatStyle<String.InterpolationFormatStyle<Key>, String.InterpolationFormatStyle<Value>>
-    {
-        .init(
-            key: .interpolation(),
-            value: .interpolation()
-        )
-    }
-
-    static func dictionary () -> [String: String].DefaultFormatStyle<String.TransparentFormatStyle, String.TransparentFormatStyle>
-    {
-        .init(
-            key: .string,
-            value: .string
         )
     }
 }

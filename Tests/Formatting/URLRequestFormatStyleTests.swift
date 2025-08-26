@@ -7,7 +7,7 @@ struct URLRequestFormatStyleTests {
     @Test("Placeholders – All – Enabled")
     func placeholders_all_enabled () {
         // Given
-        let sut = URLRequest.DefaultFormatStyle(
+        let sut = URLRequest.StandardFormatStyle(
             url: .url,
             headers: .dictionary(),
             body: .base64.optional
@@ -35,7 +35,7 @@ struct URLRequestFormatStyleTests {
     @Test("Placeholders – All – Disabled")
     func placeholders_all_disabled () {
         // Given
-        let sut = URLRequest.DefaultFormatStyle(
+        let sut = URLRequest.StandardFormatStyle(
             url: .url,
             headers: .dictionary(),
             body: .base64.optional
@@ -59,7 +59,7 @@ struct URLRequestFormatStyleTests {
 
     @Test("Headers")
     func headers () {
-        let sut = URLRequest.DefaultFormatStyle(
+        let sut = URLRequest.StandardFormatStyle(
             url: .url,
             headers: .dictionary(),
             body: .base64.optional

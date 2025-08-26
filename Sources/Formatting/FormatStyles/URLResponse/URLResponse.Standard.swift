@@ -1,19 +1,11 @@
 import Foundation
 
-extension URLResponse.DefaultFormatStyle {
-    public struct Options: Sendable, Codable, Hashable {
-        public let prefix: String?
-
-        public init (
-            prefix: String? = nil
-        ) {
-            self.prefix = prefix
-        }
-    }
-}
+public typealias URLResponseDefaultFormatStyle = URLResponse.StandardFormatStyle<
+    DictionaryDefaultFormatStyle<AnyHashable, Any>
+>
 
 extension URLResponse {
-    public struct DefaultFormatStyle<HeadersFS>: FormatStyle, Codable, Hashable
+    public struct StandardFormatStyle<HeadersFS>: FormatStyle, Codable, Hashable
     where
     HeadersFS: FormatStyle,
     HeadersFS.FormatInput == [AnyHashable: Any],
@@ -68,7 +60,7 @@ extension URLResponse {
     }
 }
 
-public extension URLResponse.DefaultFormatStyle {
+public extension URLResponse.StandardFormatStyle {
     func options (_ options: Options) -> Self {
         .init(
             options: options,
@@ -84,50 +76,6 @@ public extension URLResponse.DefaultFormatStyle {
             ),
             url: urlFormatStyle,
             headers: headersFormatStyle
-        )
-    }
-}
-
-public extension FormatStyle {
-    static func urlResponse <HeadersFS> (
-        url: URL.FormatStyle = .url,
-        headers: HeadersFS
-    ) -> Self where Self == URLResponse.DefaultFormatStyle<HeadersFS> {
-        .init(
-            url: url,
-            headers: headers
-        )
-    }
-
-    static func urlResponse (
-        url: URL.FormatStyle = .url,
-        headers: [AnyHashable: Any].DefaultFormatStyle<String.InterpolationFormatStyle<AnyHashable>, String.InterpolationFormatStyle<Any>> = .dictionary()
-    ) -> Self where Self == URLResponse.DefaultFormatStyle<[AnyHashable: Any].DefaultFormatStyle<String.InterpolationFormatStyle<AnyHashable>, String.InterpolationFormatStyle<Any>>> {
-        .init(
-            url: url,
-            headers: headers
-        )
-    }
-}
-
-public extension AnyFormatStyle {
-    static func urlResponse <HeadersFS> (
-        url: URL.FormatStyle = .url,
-        headers: HeadersFS
-    ) -> URLResponse.DefaultFormatStyle<HeadersFS> {
-        .init(
-            url: url,
-            headers: headers
-        )
-    }
-
-    static func urlResponse (
-        url: URL.FormatStyle = .url,
-        headers: [AnyHashable: Any].DefaultFormatStyle<String.InterpolationFormatStyle<AnyHashable>, String.InterpolationFormatStyle<Any>> = .dictionary()
-    ) -> URLResponse.DefaultFormatStyle<[AnyHashable: Any].DefaultFormatStyle<String.InterpolationFormatStyle<AnyHashable>, String.InterpolationFormatStyle<Any>>> {
-        .init(
-            url: url,
-            headers: headers
         )
     }
 }

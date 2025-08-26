@@ -35,7 +35,7 @@ extension CompositeFormatStyle: Hashable {
     public func hash (into hasher: inout Hasher) { }
 }
 
-extension FormatStyle {
+public extension FormatStyle {
     static func `try` <Input, Output, DefaultFS: FormatStyle> (
         _ formatStyles: AnyFormatStyle<Input, Output?>...,
         or default: DefaultFS
@@ -51,7 +51,7 @@ extension FormatStyle {
     }
 }
 
-extension AnyFormatStyle {
+public extension AnyFormatStyle {
     static func `try` <Input, Output, DefaultFS: FormatStyle> (
         _ formatStyles: AnyFormatStyle<Input, Output?>...,
         or default: DefaultFS

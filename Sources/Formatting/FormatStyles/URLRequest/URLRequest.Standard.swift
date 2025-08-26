@@ -1,25 +1,12 @@
 import Foundation
 
-extension URLRequest.DefaultFormatStyle {
-    public struct Options: Sendable, Codable, Hashable {
-        public let prefix: String?
-        public let isRequestLineOnly: Bool
-        public let usePlaceholders: Bool
-
-        public init (
-            prefix: String? = nil,
-            isRequestLineOnly: Bool = false,
-            usePlaceholders: Bool = true
-        ) {
-            self.prefix = prefix
-            self.isRequestLineOnly = isRequestLineOnly
-            self.usePlaceholders = usePlaceholders
-        }
-    }
-}
+public typealias URLRequestDefaultFormatStyle = URLRequest.StandardFormatStyle<
+    OptionalCompositeFormatStyle<Data, String>,
+    DictionaryDefaultFormatStyle<String, String>
+>
 
 extension URLRequest {
-    public struct DefaultFormatStyle<BodyFS, HeadersFS>: FormatStyle, Codable, Hashable
+    public struct StandardFormatStyle<BodyFS, HeadersFS>: FormatStyle, Codable, Hashable
     where
     BodyFS: FormatStyle,
     BodyFS.FormatInput == Data,
@@ -134,7 +121,7 @@ extension URLRequest {
 	}
 }
 
-public extension URLRequest.DefaultFormatStyle {
+public extension URLRequest.StandardFormatStyle {
     func options (_ options: Options) -> Self {
         .init(
             options: options,
@@ -180,106 +167,6 @@ public extension URLRequest.DefaultFormatStyle {
             url: urlFormatStyle,
             headers: headersFormatStyle,
             body: bodyFormatStyle
-        )
-    }
-}
-
-public extension FormatStyle {
-    static func urlRequest <BodyFS, HeadersFS> (
-        url: URL.FormatStyle = .url,
-        headers: HeadersFS,
-        body: BodyFS
-    ) -> Self where Self == URLRequest.DefaultFormatStyle<BodyFS, HeadersFS> {
-        .init(
-            url: url,
-            headers: headers,
-            body: body
-        )
-    }
-
-    static func urlRequest <BodyFS> (
-        url: URL.FormatStyle = .url,
-        headers: [String: String].DefaultFormatStyle<String.TransparentFormatStyle, String.TransparentFormatStyle> = .dictionary(),
-        body: BodyFS
-    ) -> Self where Self == URLRequest.DefaultFormatStyle<BodyFS, [String: String].DefaultFormatStyle<String.TransparentFormatStyle, String.TransparentFormatStyle>> {
-        .init(
-            url: url,
-            headers: headers,
-            body: body
-        )
-    }
-
-    static func urlRequest <HeadersFS> (
-        url: URL.FormatStyle = .url,
-        headers: HeadersFS,
-        body: Data.JSONFormatStyle = .json
-    ) -> Self where Self == URLRequest.DefaultFormatStyle<Data.JSONFormatStyle, HeadersFS> {
-        .init(
-            url: url,
-            headers: headers,
-            body: body
-        )
-    }
-
-    static func urlRequest (
-        url: URL.FormatStyle = .url,
-        headers: [String: String].DefaultFormatStyle<String.TransparentFormatStyle, String.TransparentFormatStyle> = .dictionary(),
-        body: Data.JSONFormatStyle = .json
-    ) -> Self where Self == URLRequest.DefaultFormatStyle<Data.JSONFormatStyle, [String: String].DefaultFormatStyle<String.TransparentFormatStyle, String.TransparentFormatStyle>> {
-        .init(
-            url: url,
-            headers: headers,
-            body: body
-        )
-    }
-}
-
-public extension AnyFormatStyle {
-    static func urlRequest <BodyFS, HeadersFS> (
-        url: URL.FormatStyle = .url,
-        headers: HeadersFS,
-        body: BodyFS
-    ) -> URLRequest.DefaultFormatStyle<BodyFS, HeadersFS> {
-        .init(
-            url: url,
-            headers: headers,
-            body: body
-        )
-    }
-
-    static func urlRequest <BodyFS> (
-        url: URL.FormatStyle = .url,
-        headers: [String: String].DefaultFormatStyle<String.TransparentFormatStyle, String.TransparentFormatStyle> = .dictionary(),
-        body: BodyFS
-    ) -> URLRequest.DefaultFormatStyle<BodyFS, [String: String].DefaultFormatStyle<String.TransparentFormatStyle, String.TransparentFormatStyle>> {
-        .init(
-            url: url,
-            headers: headers,
-            body: body
-        )
-    }
-
-    static func urlRequest <HeadersFS> (
-        url: URL.FormatStyle = .url,
-        headers: HeadersFS,
-        body: Data.JSONFormatStyle = .json
-    ) -> URLRequest.DefaultFormatStyle<Data.JSONFormatStyle, HeadersFS> {
-        .init(
-            url: url,
-            headers: headers,
-            body: body
-        )
-    }
-
-    static func urlRequest (
-        url: URL.FormatStyle = .url,
-        headers: [String: String].DefaultFormatStyle<String.TransparentFormatStyle, String.TransparentFormatStyle> = .dictionary(),
-        body: Data.JSONFormatStyle = .json
-    ) -> URLRequest.DefaultFormatStyle<Data.JSONFormatStyle, [String: String].DefaultFormatStyle<String.TransparentFormatStyle, String.TransparentFormatStyle>> {
-        .init(
-            url: url,
-            headers: headers,
-            body: body
         )
     }
 }

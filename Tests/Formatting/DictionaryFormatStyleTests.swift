@@ -10,7 +10,7 @@ struct DictionaryFormatStyleTests {
             "1": "A",
             "2": "B",
         ]
-        let sut = [String: String].DefaultFormatStyle(
+        let sut = [String: String].StandardFormatStyle(
             key: .interpolation(),
             value: .interpolation()
         )
@@ -39,7 +39,7 @@ struct DictionaryFormatStyleTests {
             "1": "A",
             "2": "B",
         ]
-        let sut = [String: String].DefaultFormatStyle(
+        let sut = [String: String].StandardFormatStyle(
             key: .interpolation(),
             value: .interpolation()
         )

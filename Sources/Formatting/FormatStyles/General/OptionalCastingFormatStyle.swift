@@ -20,9 +20,7 @@ public struct OptionalCastingFormatStyle<CastingFS: FormatStyle, Input>: FormatS
 
 public extension FormatStyle {
     static func cast <CastingFS: FormatStyle, Input> (to casting: CastingFS) -> Self
-    where
-    Self == OptionalCastingFormatStyle<CastingFS, Input>
-    {
+    where Self == OptionalCastingFormatStyle<CastingFS, Input> {
         .init(casting: casting)
     }
 }

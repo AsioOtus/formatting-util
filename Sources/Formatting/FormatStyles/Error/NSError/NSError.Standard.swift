@@ -1,7 +1,11 @@
 import Foundation
 
+public typealias NSErrorDefaultFormatStyle = NSError.StandardFormatStyle<
+    DictionaryDefaultFormatStyle<String, Any>
+>
+
 extension NSError {
-    public struct DefaultFormatStyle<UserInfoFS>: FormatStyle
+    public struct StandardFormatStyle<UserInfoFS>: FormatStyle
     where
     UserInfoFS: FormatStyle,
     UserInfoFS.FormatInput == [String: Any],
@@ -10,9 +14,9 @@ extension NSError {
         public let userInfoFormatStyle: UserInfoFS
 
         public init (
-            userInfoFormatStyle: UserInfoFS
+            userInfo: UserInfoFS
         ) {
-            self.userInfoFormatStyle = userInfoFormatStyle
+            self.userInfoFormatStyle = userInfo
         }
 
         public func format (_ error: NSError) -> String {
@@ -43,20 +47,29 @@ extension NSError {
 }
 
 public extension FormatStyle {
-    static func nsError <UserInfoFS> (userInfo: UserInfoFS) -> Self
-    where
-    UserInfoFS: FormatStyle,
-    Self == NSError.DefaultFormatStyle<UserInfoFS>
-    {
-        .init(userInfoFormatStyle: userInfo)
+    static func nsError <UserInfoFS> (
+        userInfo: UserInfoFS
+    ) -> Self where Self == NSError.StandardFormatStyle<UserInfoFS>{
+        .init(userInfo: userInfo)
+    }
+
+    static func nsError (
+        userInfo: DictionaryDefaultFormatStyle<String, Any> = .dictionary()
+    ) -> Self where Self == NSErrorDefaultFormatStyle {
+        .init(userInfo: userInfo)
     }
 }
 
 public extension AnyFormatStyle {
-    static func nsError <UserInfoFS> (userInfo: UserInfoFS) -> NSError.DefaultFormatStyle<UserInfoFS>
-    where
-    UserInfoFS: FormatStyle
-    {
-        .init(userInfoFormatStyle: userInfo)
+    static func nsError <UserInfoFS> (
+        userInfo: UserInfoFS
+    ) -> NSError.StandardFormatStyle<UserInfoFS> {
+        .init(userInfo: userInfo)
+    }
+
+    static func nsError (
+        userInfo: DictionaryDefaultFormatStyle<String, Any> = .dictionary()
+    ) -> NSErrorDefaultFormatStyle {
+        .init(userInfo: userInfo)
     }
 }

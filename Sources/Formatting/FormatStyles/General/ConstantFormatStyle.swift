@@ -16,15 +16,13 @@ public struct ConstantFormatStyle<FormatInput, FormatOutput>: FormatStyle where 
 
 public extension FormatStyle {
     static func constant <FormatInput, FormatOutput> (value: FormatOutput) -> Self
-    where
-    Self == ConstantFormatStyle<FormatInput, FormatOutput>
-    {
+    where Self == ConstantFormatStyle<FormatInput, FormatOutput> {
         .init(value: value)
     }
 }
 
 public extension AnyFormatStyle where FormatOutput: Codable, FormatOutput: Hashable {
-    static func interpolation (value: FormatOutput) -> ConstantFormatStyle<FormatInput, FormatOutput> {
+    static func constant (value: FormatOutput) -> ConstantFormatStyle<FormatInput, FormatOutput> {
         .init(value: value)
     }
 }

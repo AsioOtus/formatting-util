@@ -30,7 +30,7 @@ extension OptionalCompositeFormatStyle: Hashable {
     public func hash (into hasher: inout Hasher) { }
 }
 
-extension FormatStyle {
+public extension FormatStyle {
     static func `try` <Input, Output> (
         _ formatStyles: AnyFormatStyle<Input, Output?>...
     ) -> Self where Self == OptionalCompositeFormatStyle<Input, Output> {
@@ -38,7 +38,7 @@ extension FormatStyle {
     }
 }
 
-extension AnyFormatStyle {
+public extension AnyFormatStyle {
     static func `try` <Input, Output> (
         _ formatStyles: AnyFormatStyle<Input, Output?>...
     ) -> OptionalCompositeFormatStyle<Input, Output> {
